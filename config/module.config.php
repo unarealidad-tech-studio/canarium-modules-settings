@@ -7,7 +7,7 @@ return array(
 		  'cache' => 'array',
 		  'paths' => array(__DIR__ . '/../src/Settings/Entity')
 		),
-	
+
 		'orm_default' => array(
 		  'drivers' => array(
 			'Settings\Entity' => 'settings_entities'
@@ -22,19 +22,16 @@ return array(
 			'Admin\Settings\User' => 'Settings\Controller\UserController',
         ),
     ),
-	
+
 	'bjyauthorize' => array(
 		'guards' => array(
-			'BjyAuthorize\Guard\Route' => array(
-				array('route' => 'admin/settings', 'roles' => array('admin')),
-				array('route' => 'admin/settings-user', 'roles' => array('admin')),
-			),
 			'BjyAuthorize\Guard\Controller' => array(
-				array('controller' => 'Admin\Settings\User',array(), 'roles' => array('admin')),
+                array('controller' => 'Admin\Settings', 'roles' => array('admin')),
+				array('controller' => 'Admin\Settings\User', 'roles' => array('admin')),
             ),
 		),
 	),
-	
+
 	'router' => array(
         'routes' => array(
 			'admin' => array(
@@ -71,13 +68,13 @@ return array(
 			),
         ),
     ),
-	
+
     'view_manager' => array(
         'template_path_stack' => array(
             'settings' => __DIR__ . '/../view',
         ),
 		'template_map' => array(
-		
+
         ),
     ),
 );
