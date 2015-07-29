@@ -1,0 +1,101 @@
+<div class="wrapper">
+	
+	<div class="row">
+		<div class="col-sm-6">
+			<section class="panel">
+				<header class="panel-heading head-border">
+					Basic Table
+				</header>
+				<form id="widgets-tbl" action="<?php echo $this->url('admin/settings', array('action'=>'widgets'))?>" method="post" enctype="multipart/form-data">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Name</th>
+								<th>Switch</th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php if (count($this->widgets) < 1): ?> 
+							<tr>
+								<td colspan="3">No widgets found.</td>
+							</tr>
+						<?php endif; ?>
+						<?php $ctr = 1; foreach ($this->widgets as $widget): ?>
+							<tr>
+								<td><?php echo $ctr; ?></td>
+								<td><?php echo get_class($widget); ?></td>
+								<td><input type="checkbox" value="<?php echo get_class($widget); ?>" name="widget[]" <?php echo !in_array(get_class($widget), $inactiveWidgets)? 'checked="checked"' : ''; ?>></td>
+							</tr>
+						<?php $ctr++; endforeach; ?>
+						</tbody>
+					</table>
+				</form>
+				<div class="refresh-box"></div>
+			</section>
+		</div>
+		<div class="col-sm-6">
+			
+			<div class="alert alert-success alert-block fade in hide" id="success-msg">
+				<button data-dismiss="alert" class="close close-sm" type="button">
+					<i class="fa fa-times"></i>
+				</button>
+				<h4><i class="fa fa-ok-sign"></i> Success!</h4>
+				<p>The widgets has been updated.</p>
+			</div>
+
+			<div class="alert alert-danger alert-block fade in hide" id="error-msg">
+				<button data-dismiss="alert" class="close close-sm" type="button">
+					<i class="fa fa-times"></i>
+				</button>
+				<h4><i class="fa fa-ok-sign"></i> Oh Snap!</h4>
+				<p>The system has failed to save the configrations. Please contact your website administrator to resolve this issue.</p>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+		var opts = { size: 'small', color: '#79d4a7', secondaryColor: '#e8e8e8' };
+		var switches = $('[name="widget[]"]').get();
+		for ( var x in switches)  {
+			Switchery( switches[x] , opts );
+		}
+
+		$('#widgets-tbl').submit(function(e){
+			e.preventDefault();
+			$.ajax({
+				url: $(this).prop('action'),
+				type: 'POST',
+				data: $(this).serialize(),
+				dataType: 'json',
+				beforeSend: function() {
+					$("<div class='refresh-block'><span class='refresh-loader'><i class='fa fa-spinner fa-spin'></i></span></div>")
+					.appendTo( $('#widgets-tbl').parent() );
+				},
+				success: function(data) {
+					if (typeof data.error != 'undefined') {
+						$('#success-msg').addClass('hide');
+						$('#error-msg').removeClass('hide');
+						console.log(data.error);
+					}
+					if (data.success == 1) {
+						$('#success-msg').removeClass('hide');
+						$('#error-msg').addClass('hide');
+					}
+
+					$('#widgets-tbl').parent().find('.refresh-block').remove();
+				}
+			});
+		});
+
+		$('[name="widget[]"]').change(function(){
+			$('#widgets-tbl').submit();
+		});
+	});
+
+</script>

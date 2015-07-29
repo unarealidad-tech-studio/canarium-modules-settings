@@ -39,4 +39,33 @@ class Module
             ),
         );
     }
+
+    public function getServiceConfig()
+    {
+        return array(
+            'invokables' => array(
+                'settings_widgets_service' => 'Settings\Service\Widgets'
+            ),
+            'factories' => array(
+                'canariumsettings_widget_options' => function ($sm) {
+                    $config = $sm->get('Config');
+                    return new Option\WidgetOption(
+                        isset($config['widgets']) ? $config['widgets'] : array()
+                    );
+                },
+            )
+        );
+    }
+
+    public function getViewHelperConfig()
+    {
+        return array(
+            'factories' => array(
+                'renderWidgets' => function($sm) {
+                    $locator = $sm->getServiceLocator();
+                    return new \Settings\View\Helper\RenderWidgets($locator);
+                },
+            ),
+        );
+    }
 }

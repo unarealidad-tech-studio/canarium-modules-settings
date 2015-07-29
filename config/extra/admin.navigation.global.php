@@ -16,6 +16,13 @@ return array(
 						'controller' => 'Admin\Settings\User',
 						'icon' => 'fa fa-cog',
 					),
+					array(
+						'label' => 'Widgets',
+						'resource' => 'admin',
+						'route' => 'admin/settings',
+						'action' => 'widgets',
+						'icon' => 'fa fa-cog',
+					),
 				),
              ),
          ),
