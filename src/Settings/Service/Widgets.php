@@ -33,8 +33,9 @@ class Widgets implements ServiceLocatorAwareInterface
         $config_script.= '      \'widgets\' => array('.PHP_EOL;
         $config_script.= '          \'inactive_widgets\' => array('.PHP_EOL;
         $widgets = $this->getWidgets();
+
         foreach ($widgets as $widget) {
-            if (!in_array(get_class($widget), $active_widgets)) {
+            if (!$active_widgets || !in_array(get_class($widget), $active_widgets)) {
                 $config_script.= '              \''.get_class($widget).'\', '.PHP_EOL;
             }
         }

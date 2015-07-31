@@ -23,6 +23,8 @@ class RenderWidgets extends AbstractHelper
         $options = $this->getServiceLocator()->get('canariumsettings_widget_options');
         $inactiveWidgets = $options->getInactiveWidgets();
 
+
+        $widgets = array();
         foreach ($widgetObjects as $widgetObject) {
             if (!in_array(get_class($widgetObject), $inactiveWidgets)) {
                 $widgets[get_class($widgetObject)] = $this->getView()->render( $widgetObject->getView() );
