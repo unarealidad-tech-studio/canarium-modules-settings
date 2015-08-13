@@ -18,6 +18,7 @@ use Zend\Paginator\Paginator as ZendPaginator;
 
 class UserController extends AbstractActionController
 {
+    protected $userForm;
 
     public function indexAction()
 	{
@@ -29,4 +30,37 @@ class UserController extends AbstractActionController
 		return $view;
     }
 
+    public function createAction()
+    {
+        return array();
+    }
+
+    public function deleteAction()
+    {
+        return array();
+    }
+
+    public function editAction()
+    {
+        return array();
+    }
+
+    public function settingsAction()
+    {
+        $form = new \Settings\Form\SettingsForm();
+        $data = $this->getServiceLocator()->get('canariumsettings_user_options')->toArray();
+        $form->setData($data);
+
+        $service = $this->getServiceLocator()->get('settings_settings_service');
+
+        if ($this->getRequest()->isPost()) {
+            $this->flashMessenger()->addSuccessMessage('Configurations has been updated');
+            $service->writeUserConfiguration($this->getRequest()->getPost());
+            return $this->redirect()->toRoute('admin/settings-user', array('action'=>'settings'));
+        }
+
+        return array(
+            'form' => $form,
+        );
+    }
 }

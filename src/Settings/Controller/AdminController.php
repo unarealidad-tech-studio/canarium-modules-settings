@@ -19,10 +19,9 @@ use Zend\Paginator\Paginator as ZendPaginator;
 
 class AdminController extends AbstractActionController
 {
-	
+
 	public function indexAction()
 	{
-		
 	}
 
 	public function widgetsAction()
@@ -49,6 +48,6 @@ class AdminController extends AbstractActionController
 		return array(
 			'widgets' => $widgets,
 			'inactiveWidgets' => $inactiveWidgets,
-		); 	
+		);
 	}
 }

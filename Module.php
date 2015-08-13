@@ -44,13 +44,20 @@ class Module
     {
         return array(
             'invokables' => array(
-                'settings_widgets_service' => 'Settings\Service\Widgets'
+                'settings_widgets_service' => 'Settings\Service\Widgets',
+                'settings_settings_service' => 'Settings\Service\Settings'
             ),
             'factories' => array(
                 'canariumsettings_widget_options' => function ($sm) {
                     $config = $sm->get('Config');
                     return new Option\WidgetOption(
                         isset($config['widgets']) ? $config['widgets'] : array()
+                    );
+                },
+                'canariumsettings_user_options' => function ($sm) {
+                    $config = $sm->get('Config');
+                    return new Option\UserOption(
+                        isset($config['canariumuser']) ? $config['canariumuser'] : array()
                     );
                 },
             )
