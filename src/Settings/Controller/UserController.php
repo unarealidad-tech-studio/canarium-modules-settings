@@ -37,7 +37,23 @@ class UserController extends AbstractActionController
 
     public function deleteAction()
     {
-        return array();
+        $id = $this->params()->fromRoute('id', 0);
+        $em = $this->serviceLocator->get('Doctrine\ORM\EntityManager');;
+        $user = $em->getRepository('CanariumCore\Entity\User')->find($id);
+
+        if (!$user) {
+            return $this->redirect()->toRoute('admin/settings-user');
+        }
+
+        if ($this->getRequest()->isPost()) {
+            $service = $this->getServiceLocator()->get('canariumcore_user_service');
+            $service->removeUser($user);
+            return $this->redirect()->toRoute('admin/settings-user');
+        }
+
+        return array(
+            'user' => $user
+        );
     }
 
     public function editAction()
