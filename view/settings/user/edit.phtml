@@ -1,1 +1,73 @@
-edit.phtml
+<div class="page-head">
+    <h3 class="m-b-less">Edit</h3>
+</div>
+
+<div class="wrapper">
+    <div class="row">
+        <div class="col-xs-12 col-md-6">
+            <section class="panel">
+
+                <header class="panel-heading">
+                    Edit User
+                </header>
+
+                <?php echo $this->form()->openTag($form); ?>
+                <div class="panel-body">
+
+                    <?=$this->flashMessenger()
+                            ->setMessageOpenFormat('<div%s><button data-dismiss="alert" class="close close-sm" type="button"><i class="fa fa-times"></i></button><h4>Error</h4><p>')
+                            ->setMessageSeparatorString('</p><p>')
+                            ->setMessageCloseString('</p></div>')
+                            ->render('error', array('alert', 'alert-block', 'alert-danger', 'fade', 'in'))?>
+
+                    <?=$this->flashMessenger()
+                            ->setMessageOpenFormat('<div%s><button data-dismiss="alert" class="close close-sm" type="button"><i class="fa fa-times"></i></button><h4>Success</h4><p>')
+                            ->setMessageSeparatorString('</p><p>')
+                            ->setMessageCloseString('</p></div>')
+                            ->render('success', array('alert', 'alert-block', 'alert-success', 'fade', 'in'))?>
+
+                    <?php foreach ($form as $element): ?>
+                        <div class="form-group">
+                        <?php if (!$element instanceof Zend\Form\Element\Button): ?>
+                            <?php echo $this->formLabel($element)?>
+                            <small><?php echo $element->getName()=='password' ? '(Please leave empty if you do not wish to change password)':''?></small>
+                        <?php endif ?>
+
+                        <?php if ($element instanceof Zend\Form\Element\Button): $element->setAttribute('class','btn btn-lg btn-success btn-block'); ?>
+                            <?php // echo $this->formButton($element) ?>
+                        <?php elseif ($element instanceof Zend\Form\Element\Captcha): $element->setAttribute('class','form-control'); ?>
+                            <?php echo $this->formCaptcha($element) . $this->formElementErrors($element) ?>
+                        <?php elseif ($element instanceof DoctrineModule\Form\Element\ObjectMultiCheckbox): $element->setLabelAttributes(array('class'=>'checkbox-custom check-success')) ?>
+
+                            <?php foreach ($element->getValueOptions() as $key => $opt):?>
+                            <label class="checkbox-custom check-success">
+                                <?php
+                                    $checked = '';
+                                    if (is_array($element->getValue()) && in_array($opt['value'], $element->getValue())) {
+                                        $checked = 'checked="checked"';
+                                    }
+                                ?>
+                                <input type="checkbox" id="chk-role-<?=$key?>" name="<?php echo $element->getAttribute('name')?>[]" value="<?php echo $opt['value']?>" <?=$checked?>>
+                                <label for="chk-role-<?=$key?>"><?php echo ucfirst($opt['label'])?></label>
+                            </label>
+                            <?php endforeach;?>
+
+                            <?php echo $this->formElementErrors($element)?>
+                            <?php //echo $this->formMultiCheckbox($element) . $this->formElementErrors($element) ?>
+
+                        <?php else: $element->setAttribute('class','form-control');?>
+                            <?php echo $this->formInput($element) . $this->formElementErrors($element) ?>
+                        <?php endif ?>
+                        </div>
+                    <?php endforeach ?>
+
+                </div>
+                <?php
+                echo $this->formSubmit($form->get('submit')->setValue('Save'));
+                echo $this->form()->closeTag();
+                ?>
+            </section>
+        </div>
+    </div>
+</div>
+

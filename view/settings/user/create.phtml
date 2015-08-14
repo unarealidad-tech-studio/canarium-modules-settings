@@ -1,11 +1,16 @@
 <div class="page-head">
-    <h3 class="m-b-less">Settings</h3>
+    <h3 class="m-b-less">Create</h3>
 </div>
 
 <div class="wrapper">
     <div class="row">
         <div class="col-xs-12 col-md-6">
             <section class="panel">
+
+                <header class="panel-heading">
+                    Create New User
+                </header>
+
                 <?php echo $this->form()->openTag($form); ?>
                 <div class="panel-body">
 
@@ -24,7 +29,7 @@
                     <?php foreach ($form as $element): ?>
                         <div class="form-group">
                         <?php if (!$element instanceof Zend\Form\Element\Button): ?>
-                            <label></label><?php echo $this->formLabel($element) ?></label>
+                            <?php echo $this->formLabel($element) ?>
                         <?php endif ?>
 
                         <?php if ($element instanceof Zend\Form\Element\Button): $element->setAttribute('class','btn btn-lg btn-success btn-block'); ?>
@@ -35,7 +40,13 @@
 
                             <?php foreach ($element->getValueOptions() as $key => $opt):?>
                             <label class="checkbox-custom check-success">
-                                <input type="checkbox" id="chk-role-<?=$key?>" name="<?php echo $element->getAttribute('name')?>[]" value="<?php echo $opt['value']?>">
+                                <?php
+                                    $checked = '';
+                                    if (is_array($element->getValue()) && in_array($opt['value'], $element->getValue())) {
+                                        $checked = 'checked="checked"';
+                                    }
+                                ?>
+                                <input type="checkbox" id="chk-role-<?=$key?>" name="<?php echo $element->getAttribute('name')?>[]" value="<?php echo $opt['value']?>" <?=$checked?>>
                                 <label for="chk-role-<?=$key?>"><?php echo ucfirst($opt['label'])?></label>
                             </label>
                             <?php endforeach;?>
@@ -51,7 +62,7 @@
 
                 </div>
                 <?php
-                echo $this->formSubmit($form->get('submit')->setValue('Create'));
+                echo $this->formSubmit($form->get('submit')->setValue('Save'));
                 echo $this->form()->closeTag();
                 ?>
             </section>

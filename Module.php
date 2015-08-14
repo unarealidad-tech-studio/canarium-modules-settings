@@ -59,7 +59,7 @@ class Module
                     return new Option\UserOption(
                         isset($config['canariumuser']) ? $config['canariumuser'] : array()
                     );
-                },
+                }
             )
         );
     }

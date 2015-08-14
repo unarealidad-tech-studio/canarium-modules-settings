@@ -34,6 +34,8 @@ class UserController extends AbstractActionController
     public function createAction()
     {
         $form = $this->getUserForm();
+        $this->getUserService()->setRegisterForm($form);
+
         $service = $this->getUserService();
 
         if ($this->getRequest()->getQuery('error')) {
@@ -58,8 +60,8 @@ class UserController extends AbstractActionController
                 }
 
                 $objectManager->flush();
+                return $this->redirect()->toRoute('admin/settings-user');
             }
-            return $this->redirect()->toRoute('admin/settings-user');
         }
 
         return array(
@@ -90,7 +92,38 @@ class UserController extends AbstractActionController
 
     public function editAction()
     {
-        return array();
+        $userId         = $this->params()->fromRoute('id', 0);
+        $objectManager  = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $user           = $objectManager->getRepository('CanariumCore\Entity\User')->find($userId);
+        $service        = $this->getServiceLocator()->get('canariumcore_user_service');
+        $form           = $this->getUserForm();
+
+        if (!$user) {
+            return $this->redirect()->toRoute('admin/settings-user', array('action'=>'index'));
+        }
+
+        if ($this->getRequest()->isPost()) {
+            $data    = $this->getRequest()->getPost();
+            if ($service->updateUser($user, (array) $data)) {
+                $this->flashMessenger()->addSuccessMessage('User has been updated successfully');
+                return $this->redirect()->toRoute('admin/settings-user', array('action'=>'edit', 'id' => $userId));
+            }
+        } else {
+            $form->bind($user);
+        }
+
+        $userRoles = array();
+
+        foreach ($user->getRoles() as $role) {
+            $userRoles[] = $role;
+        }
+
+        $form->get('role')->setValue($role);
+
+        return array(
+            'form' => $form,
+            'user' => $user
+        );
     }
 
     public function settingsAction()
@@ -122,23 +155,7 @@ class UserController extends AbstractActionController
     public function getUserForm()
     {
         if (!$this->userForm) {
-            $this->userForm = $this->getServiceLocator()->get('zfcuser_register_form');
-            $this->userForm->get('submit')->setLabel('Save');
-
-            // Add the roles
-            $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-            $this->userForm->add(array(
-                'name' => 'role',
-                'type' => 'DoctrineModule\Form\Element\ObjectMultiCheckbox',
-                'options' => array(
-                    'object_manager'    => $objectManager,
-                    'target_class'      => 'CanariumCore\Entity\Role',
-                    'property'          => 'roleId',
-                    'label'             => 'Roles'
-                ),
-            ));
-
-            $this->getUserService()->setRegisterForm($this->userForm);
+            $this->userForm = $this->getServiceLocator()->get('canariumcore_user_form');
         }
         return $this->userForm;
     }
