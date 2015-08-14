@@ -1,35 +1,43 @@
-<section class="panel">
-    <header class="panel-heading">
-        Users
-    </header>
-    <div class="panel-body">
-    	<table class="table table-condensed">
-        	<thead>
-                <tr>
-                    <td width="10"></td>
-                    <td>Email</td>
-                    <td>Type</td>
-                    <td>Last Login</td>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody>
-            <?php $ctr = 1; foreach($users as $entry) : ?>
-           	<tr>
-                <td><span class="label label-default"><?=$ctr?></span></td><td><?=$entry->getEmail()?></td>
-                <td>
-                    <?php foreach($entry->getRoles() as $v) : ?>
-            	       <span class="label label-default"><?=$v->getRoleId()?></span>
-                    <?php endforeach; ?>
-                </td>
-                <td><?=$entry->getLastLogin()?$entry->getLastLogin()->format('F j, Y H:ia'):''?></td>
-                <td class="text-center">
-                    <a href="<?=$this->url('admin/settings-user', array('action'=>'edit','id'=>$entry->getId()))?>" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></a>
-                    <a href="<?=$this->url('admin/settings-user', array('action'=>'delete','id'=>$entry->getId()))?>" class="btn btn-xs btn-danger"><i class="fa fa-remove"></i></a>
-                </td>
-            </tr>
-            </tbody>
-            <?php $ctr++; endforeach; ?>
-        </table>
+
+<div class="wrapper">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    Users List
+                </header>
+                <div class="panel-body">
+
+                	<table class="table table-condensed">
+                    	<thead>
+                            <tr>
+                                <td class="col-md-1">#</td>
+                                <td class="col-md-3">Email</td>
+                                <td class="col-md-3 col-xs-2">Role</td>
+                                <td class="col-md-3">Last Login</td>
+                                <td class="col-md-2 col-xs-2"></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php $ctr = 1; foreach($users as $entry) : ?>
+                       	<tr>
+                            <td><span class=""><?=$entry->getId()?></span></td><td><?=$entry->getEmail()?></td>
+                            <td>
+                                <?php foreach($entry->getRoles() as $v) : ?>
+                        	       <span class="label label-default"><?=$v->getRoleId()?></span>
+                                <?php endforeach; ?>
+                            </td>
+                            <td><?=$entry->getLastLogin()?$entry->getLastLogin()->format('F j, Y H:ia'):''?></td>
+                            <td class="text-center">
+                                <a href="<?=$this->url('admin/settings-user', array('action'=>'edit','id'=>$entry->getId()))?>" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></a>
+                                <a href="<?=$this->url('admin/settings-user', array('action'=>'delete','id'=>$entry->getId()))?>" class="btn btn-xs btn-danger"><i class="fa fa-remove"></i></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <?php $ctr++; endforeach; ?>
+                    </table>
+                </div>
+            </section>
+        </div>
     </div>
-</section>
+</div>

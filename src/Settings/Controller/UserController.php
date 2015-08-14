@@ -19,6 +19,7 @@ use Zend\Paginator\Paginator as ZendPaginator;
 class UserController extends AbstractActionController
 {
     protected $userForm;
+    protected $userService;
 
     public function indexAction()
 	{
@@ -32,7 +33,38 @@ class UserController extends AbstractActionController
 
     public function createAction()
     {
-        return array();
+        $form = $this->getUserForm();
+        $service = $this->getUserService();
+
+        if ($this->getRequest()->getQuery('error')) {
+            $this->flashMessenger()->addErrorMessage($this->getRequest()->getQuery('error'));
+            return $this->redirect()->toRoute('admin/settings-user', array('action'=>'create'));
+        }
+
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost();
+            $user = $service->register((array) $data);
+
+            // delete any existing roles added from  register.post event
+            // add new roles selected
+            if ($user) {
+                $defaultRoles = $user->getRoles(false);
+                $user->removeRole($defaultRoles);
+                $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+
+                foreach ($data['role'] as $roleId) {
+                    $role = $objectManager->getRepository('CanariumCore\Entity\Role')->find($roleId);
+                    $user->addRole($role);
+                }
+
+                $objectManager->flush();
+            }
+            return $this->redirect()->toRoute('admin/settings-user');
+        }
+
+        return array(
+            'form' => $form
+        );
     }
 
     public function deleteAction()
@@ -79,4 +111,36 @@ class UserController extends AbstractActionController
             'form' => $form,
         );
     }
+
+    public function getUserService()
+    {
+        if (!$this->userService)
+            $this->userService = $this->getServiceLocator()->get('zfcuser_user_service');
+        return $this->userService;
+    }
+
+    public function getUserForm()
+    {
+        if (!$this->userForm) {
+            $this->userForm = $this->getServiceLocator()->get('zfcuser_register_form');
+            $this->userForm->get('submit')->setLabel('Save');
+
+            // Add the roles
+            $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+            $this->userForm->add(array(
+                'name' => 'role',
+                'type' => 'DoctrineModule\Form\Element\ObjectMultiCheckbox',
+                'options' => array(
+                    'object_manager'    => $objectManager,
+                    'target_class'      => 'CanariumCore\Entity\Role',
+                    'property'          => 'roleId',
+                    'label'             => 'Roles'
+                ),
+            ));
+
+            $this->getUserService()->setRegisterForm($this->userForm);
+        }
+        return $this->userForm;
+    }
+
 }
