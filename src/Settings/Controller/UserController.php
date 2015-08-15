@@ -118,7 +118,7 @@ class UserController extends AbstractActionController
             $userRoles[] = $role;
         }
 
-        $form->get('role')->setValue($role);
+        $form->get('role')->setValue($userRoles);
 
         return array(
             'form' => $form,
