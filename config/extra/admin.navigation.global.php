@@ -41,7 +41,7 @@ return array(
 					),
 					array(
 						'label' => 'Settings',
-						'resource' => 'admin',
+						'resource' => 'superuser',
 						'route' => 'admin/settings-user',
 						'action' => 'settings',
 						'icon' => 'fa fa-cog',
