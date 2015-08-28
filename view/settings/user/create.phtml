@@ -38,7 +38,7 @@
                             <?php echo $this->formCaptcha($element) . $this->formElementErrors($element) ?>
                         <?php elseif ($element instanceof DoctrineModule\Form\Element\ObjectMultiCheckbox): $element->setLabelAttributes(array('class'=>'checkbox-custom check-success')) ?>
 
-                            <?php foreach ($element->getValueOptions() as $key => $opt):?>
+                            <?php foreach ($element->getValueOptions() as $key => $opt): if ($currentUserRole->getId() < $opt['value']) continue;?>
                             <label class="checkbox-custom check-success">
                                 <?php
                                     $checked = '';

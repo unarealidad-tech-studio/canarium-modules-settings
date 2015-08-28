@@ -35,8 +35,14 @@ class UserController extends AbstractActionController
     {
         $form = $this->getUserForm();
         $this->getUserService()->setRegisterForm($form);
+        $currentUser = $this->zfcUserAuthentication()->getIdentity();
 
         $service = $this->getUserService();
+
+        // get the highest role
+        $currentUserRole = $this->getServiceLocator()
+                                ->get('canariumcore_user_service')
+                                ->getHighestRole($currentUser);
 
         if ($this->getRequest()->getQuery('error')) {
             $this->flashMessenger()->addErrorMessage($this->getRequest()->getQuery('error'));
@@ -65,7 +71,8 @@ class UserController extends AbstractActionController
         }
 
         return array(
-            'form' => $form
+            'form'        => $form,
+            'currentUserRole' => $currentUserRole,
         );
     }
 
@@ -97,6 +104,12 @@ class UserController extends AbstractActionController
         $user           = $objectManager->getRepository('CanariumCore\Entity\User')->find($userId);
         $service        = $this->getServiceLocator()->get('canariumcore_user_service');
         $form           = $this->getUserForm();
+        $currentUser    = $this->zfcUserAuthentication()->getIdentity();
+
+        // get the highest role
+        $currentUserRole = $this->getServiceLocator()
+                                ->get('canariumcore_user_service')
+                                ->getHighestRole($currentUser);
 
         if (!$user) {
             return $this->redirect()->toRoute('admin/settings-user', array('action'=>'index'));
@@ -122,7 +135,8 @@ class UserController extends AbstractActionController
 
         return array(
             'form' => $form,
-            'user' => $user
+            'user' => $user,
+            'currentUserRole' => $currentUserRole,
         );
     }
 
