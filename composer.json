@@ -1,10 +1,10 @@
 {
     "name":         "unarealidad/canarium-modules-settings",
     "type":         "library",
-    "description":  "Lorem Ipsum",
+    "description":  "Adds a ui interface for modifying canarium core's settings and other settings that customizes the site.",
     "keywords":     ["canarium", "una realidad"],
-    "homepage":     "http://packages.canarium.ph",
-    "license":      "proprietary",
+    "homepage":     "http://www.canarium.ph",
+    "license":      "MIT",
     "authors": [
         {
             "name": "Jethro Laviste.",
@@ -14,7 +14,7 @@
         }
     ],
     "support": {
-        "email":    "jethro.laviste@unarealidad.com"
+        "email":    "errol.zuniga@unarealidad.com"
     },
 
     "minimum-stability": "stable",
