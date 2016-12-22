@@ -1,5 +1,5 @@
 {
-    "name":         "canarium/canarium-modules/settings",
+    "name":         "unarealidad/canarium-modules-settings",
     "type":         "library",
     "description":  "Lorem Ipsum",
     "keywords":     ["canarium", "una realidad"],
@@ -20,7 +20,7 @@
     "minimum-stability": "stable",
 
     "require": {
-        "canarium/canarium-kernal/canarium-core" : "dev-master"
+        "unarealidad/canarium-kernal-core" : "dev-master"
     },
 
     "repositories": [
